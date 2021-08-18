@@ -9,7 +9,7 @@ const jane =
 {
   ...john,
   name: 'Jane',
-  hobbies: ['MuayThai', 'Programming']
+  hobbies: [...john.hobbies, 'MuayThai', 'Programming']
 
 }
 
