@@ -25,7 +25,8 @@ txt.target.value = words.join(' ')
 
 })
 
-let colors = new Map([
+const colors = new Map
+([
   ['vermelho', '#AB0000'],
   ['amarelo', '#FFC80D'],
   ['verde', '#22B14B'],
@@ -61,6 +62,7 @@ formselect.addEventListener('change', (e)=>
     })
 })
 
-indexform.appendChild(formselect)
+
 formselect.setAttribute('multiple', '')
+indexform.appendChild(formselect)
 document.body.appendChild(colorbox)
