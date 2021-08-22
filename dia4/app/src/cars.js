@@ -1,4 +1,4 @@
-import{get,post} from '/src/http'
+import{get,post, del} from '/src/http'
 
 const url = 'http://localhost:3333/cars'
 const carform = document.querySelector('[data-js="cars-form"]')
@@ -92,6 +92,7 @@ function createTableRow(data)
   ]
 
   const tr = document.createElement('tr')
+  tr.dataset.plate = data.plate
 
   elements.forEach(element=>
     {
@@ -99,9 +100,40 @@ function createTableRow(data)
       tr.appendChild(td)
     })
 
+    const button = document.createElement('button')
+    button.textContent = 'Excluir'
+    button.dataset.plate = data.plate
+
+    button.addEventListener('click', handleDelete)
+
+    tr.appendChild(button)
+
   cartable.appendChild(tr)
 }
 
+async function handleDelete(e)
+{
+  const button = e.target
+
+  const plate = button.dataset.plate
+  const result = await del(url, {plate})
+
+  if(result.error)
+  {
+    console.log('erro ao deletar', error.message)
+    return
+  }
+
+  const tr = document.querySelector(`tr[data-plate="${plate}"]`)
+  cartable.removeChild(tr)
+  button.removeEventListener('click', handleDelete)
+
+  const allTrs = cartable.querySelector('tr')
+  if(!allTrs)
+  {
+    createNoCarRow()
+  }
+}
 
 function createNoCarRow()
 {
