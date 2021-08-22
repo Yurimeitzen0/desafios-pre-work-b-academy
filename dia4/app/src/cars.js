@@ -1,3 +1,5 @@
+import{get,post} from '/src/http'
+
 const url = 'http://localhost:3333/cars'
 const carform = document.querySelector('[data-js="cars-form"]')
 const cartable = document.querySelector('[data-js="table"]')
@@ -43,7 +45,7 @@ function createColor(value)
 
 }
 
-carform.addEventListener('submit', (e) =>
+carform.addEventListener('submit', async (e) =>
 {
 
   e.preventDefault()
@@ -56,6 +58,18 @@ carform.addEventListener('submit', (e) =>
     year: getElement('year').value,
     plate: getElement('plate').value,
     color: getElement('color').value
+  }
+
+  const result = await post(url, data)
+  if (result.error)
+  {
+    console.log('Erro ao cadastrar', result.message)
+    return
+  }
+
+  const noContent = document.querySelector('[data-js="no-content"]')
+  if (noContent) {
+    cartable.removeChild(noContent)
   }
   createTableRow(data)
 
@@ -97,6 +111,8 @@ function createNoCarRow()
 
   td.setAttribute('colspan', ths.length)
   td.textContent = 'Nenhum carro encontrado'
+
+  tr.dataset.js = 'no-content'
   tr.appendChild(td)
   cartable.appendChild(tr)
 
@@ -105,9 +121,7 @@ function createNoCarRow()
 
 async function main()
 {
-  const result = await fetch(url)
-  .then(r=>r.json())
-  .catch(e=> ({error: true, message: e.message}))
+  const result = await get(url)
   if(result.error)
     {
       console.log('erro ao receber dados do servidor!',result.message)
